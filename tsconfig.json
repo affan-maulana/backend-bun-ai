@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "baseUrl": "./src", // Set the base URL to the `src` folder
+    "esModuleInterop": true,
+    "paths": {
+      "@prismaCli/*": ["../prisma/*"], // Mapping for the prisma directory (outside src)
+      "@controllers/*": ["controllers/*"], // Mapping for controllers inside src
+      "@helpers/*": ["helpers/*"], // Mapping for routes inside src
+      "@services/*": ["services/*"], // Mapping for routes inside src
+      "@routes/*": ["routes/*"], // Mapping for routes inside src
+    },
+  }
+}
