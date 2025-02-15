@@ -1,11 +1,10 @@
 import {describe, expect, it, afterEach} from "bun:test"
-import app from "../src"
 import {UserTest, ApiTest} from "./test-util"
 
 describe("Authentication", () => {
 
-  afterEach(() => {
-    UserTest.delete()
+  afterEach(async () => {
+    await UserTest.delete() // Hapus user setelah setiap test
   })
 
   it("Should be Unauthorized Access", async() => {
@@ -13,7 +12,7 @@ describe("Authentication", () => {
       email: "test@test.com",
       password: "test"
     }
-    const response = await ApiTest.apiHanlder("api/auth/login", "POST", body)
+    const response = await ApiTest.apiHanlder("auth/login", "POST", body)
     expect(response.status).toBe(404)
   })
 
@@ -23,7 +22,7 @@ describe("Authentication", () => {
       email: "",
       password: ""
     }
-    const response = await ApiTest.apiHanlder("api/auth/register", "POST", body)
+    const response = await ApiTest.apiHanlder("auth/register", "POST", body)
     expect(response.status).toBe(400)
   })
 
@@ -34,19 +33,23 @@ describe("Authentication", () => {
     const body = {
       name: "test",
       email: "test@test.com",
-      password: "test"
+      password: "testLongPasswodd"
     }
-    const response = await ApiTest.apiHanlder("api/auth/register", "POST", body)
+    const response = await ApiTest.apiHanlder("auth/register", "POST", body)
+    const bodyData = await response.json()
+    
     expect(response.status).toBe(400)
+    expect(bodyData.message).toBe("Email already exist")
   })
 
   it("Should success login user", async() => {
     const body = {
       email: "test@test.com",
-      password: "test"
+      password: "testLongPasswodd"
     }
-    const response = await ApiTest.apiHanlder("api/auth/login", "POST", body)
+    const response = await ApiTest.apiHanlder("auth/login", "POST", body)
     const bodyData = await response.json()
+    console.log(bodyData);
     expect(response.status).toBe(200)
     expect(bodyData.data.email).toBe("test@test.com")
   })

@@ -17,7 +17,7 @@ export class AuthService {
 
         if (check) {
             throw new HTTPException(400, {
-                message: "Email already exists"
+                message: "Email already exist"
             })
         }
 

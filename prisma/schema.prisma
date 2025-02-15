@@ -25,6 +25,8 @@ model Users {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@map("cms_users")
+
   sessions   Sessions[]
 }
 
@@ -38,6 +40,8 @@ model Sessions {
   messages Messages[]
   user Users @relation(fields: [userId], references: [id])
 
+  @@map("cms_sessions")
+
 }
 
 // Messages
@@ -48,6 +52,8 @@ model Messages {
   isQuestion Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("trs_messages")
 
   session Sessions @relation(fields: [sessionId], references: [id])
 }
