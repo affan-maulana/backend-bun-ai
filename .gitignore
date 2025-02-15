@@ -5,4 +5,5 @@ prisma/migrations/
 bun.lockb
 package-lock.json
 dist/
-error.log
+logs/*
+bun.lock

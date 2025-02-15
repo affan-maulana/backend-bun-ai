@@ -1,11 +1,6 @@
 import { Context } from "hono";
-import axios from "axios";
 import { OpenAI } from "openai";
 import "dotenv/config";
-
-// import { LoginRequest, RegisterRequest } from "models/AuthModel";
-// import { AuthService } from "services/authService";
-
 export const chatDeepseek = async (c: Context) => {
   const { message } = await c.req.json();
 
@@ -31,16 +26,19 @@ export const chatDeepseek = async (c: Context) => {
 };
 export const chatGpt = async (c: Context) => {
   const { message } = await c.req.json();
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
+  
   if (!message) {
     return c.json({ error: "Message is required" }, 400);
   }
-
+  
   try {
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // You can use 'gpt-4' if available
-      messages: [{ role: "user", content: message }],
+      model: "gpt-3.5-turbo",
+      messages: [
+        // { role: "system", content: "jawab sebagai bajak laut" },
+        { role: "user", content: message }
+      ],
     });
 
     return c.json({ reply: response.choices[0].message.content });
