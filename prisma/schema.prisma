@@ -34,13 +34,14 @@ model Users {
 model Sessions {
   id        String @id @default(uuid())
   userId    String @db.VarChar(100)
+  name      String? @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   messages Messages[]
   user Users @relation(fields: [userId], references: [id])
 
-  @@map("cms_sessions")
+  @@map("trs_sessions")
 
 }
 

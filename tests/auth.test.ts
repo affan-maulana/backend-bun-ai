@@ -1,4 +1,4 @@
-import {describe, expect, it, afterEach} from "bun:test"
+import {describe, expect, it, afterEach, beforeEach} from "bun:test"
 import {UserTest, ApiTest} from "./test-util"
 
 describe("Authentication", () => {
@@ -7,13 +7,8 @@ describe("Authentication", () => {
     await UserTest.delete() // Hapus user setelah setiap test
   })
 
-  it("Should be Unauthorized Access", async() => {
-    const body = {
-      email: "test@test.com",
-      password: "test"
-    }
-    const response = await ApiTest.apiHanlder("auth/login", "POST", body)
-    expect(response.status).toBe(404)
+  beforeEach(async () => {
+    await UserTest.create()
   })
 
   it("Should be invalid register with null email", async() => {
@@ -27,9 +22,6 @@ describe("Authentication", () => {
   })
 
   it("Should reject register with existing email", async() => {
-    // Create User
-    await UserTest.create()
-
     const body = {
       name: "test",
       email: "test@test.com",
@@ -49,9 +41,18 @@ describe("Authentication", () => {
     }
     const response = await ApiTest.apiHanlder("auth/login", "POST", body)
     const bodyData = await response.json()
-    console.log(bodyData);
     expect(response.status).toBe(200)
     expect(bodyData.data.email).toBe("test@test.com")
   })
+
+  it("Should be Unauthorized Access Wrong Password", async() => {
+    const body = {
+      email: "test@test.com",
+      password: "1231231231231"
+    }
+    const response = await ApiTest.apiHanlder("auth/login", "POST", body)
+    expect(response.status).toBe(401)
+  })
+
 
 })

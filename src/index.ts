@@ -5,6 +5,8 @@ import { jwt } from "hono/jwt";
 import { ZodError } from "zod";
 import { AuthRoutes } from "./routes/authRoutes";
 import { ChatRoutes } from "./routes/chatRoutes";
+import { SessionRoutes } from "./routes/sessionRoutes";
+
 var secret = process.env.JWT_SECRET || "secret";
 
 const app = new Hono().basePath("/api");
@@ -13,13 +15,15 @@ app.use(cors());
 // middleware
 const authMiddleware = jwt({ secret });
 
+app.use("/session", authMiddleware);
+
 // Routes
-// app.use("/users", authMiddleware);
 app.get("/", (c) => {
   return c.text("Welcome to Bun Chat API!");
 });
 app.route("/auth", AuthRoutes);
 app.route("/chat", ChatRoutes);
+app.route("/session", SessionRoutes);
 app.notFound((c) => {
   return c.json(
     {
