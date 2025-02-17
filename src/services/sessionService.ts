@@ -48,8 +48,11 @@ export class SessionService {
   }
 
   // check if session exist
-  static async checkSessionExist(userId: string, sessionId: string): Promise<boolean> {
+  static async checkSessionExist(userId: string, sessionId: string): Promise<void> {
     const session = await prismaClient.sessions.findFirst({
+      select: {
+        id: true,
+      },
       where: {
         id: sessionId,
         userId: userId,
@@ -57,13 +60,9 @@ export class SessionService {
     });
 
     if (!session){
-      console.log("\n=====\nSession not found");
-      
       throw new HTTPException(404, {
         message: "Session not found"
       })
     }
-
-    return !!session;
   }
 }
