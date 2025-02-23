@@ -47,7 +47,7 @@ model Sessions {
 
 // Messages
 model Messages {
-  id        String @id @default(uuid())
+  id        String @id @default(cuid())
   sessionId String @db.VarChar(100)
   message   String
   isQuestion Boolean

@@ -4,39 +4,28 @@ import { MessageResponse } from "models/ChatModel";
 import { SessionMessages } from "models/SessionModel";
 import OpenAI from "openai";
 
+type ChatCompletionMessageParam = {
+  role: "system" | "user" | "assistant";
+  content: string;
+  name?: string;
+};
+
 export class ChatService {
-  static async sendChat(sessionId: string, message: string, engine: string): Promise<string> {
+  static async sendChat(sessionId: string, message: string, history: Array<ChatCompletionMessageParam>): Promise<string> {
 
-    // send chat to AI
-    let openai;
-    let aiModel;
+    // send chat to GPT
+    let AIResponse = 'dummy';
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const aiModel = "gpt-3.5-turbo";
 
-    switch (engine) {
-      case "gpt":
-        openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-        aiModel = "gpt-3.5-turbo";
-        break;
-      case "deepseek":
-        openai = new OpenAI({
-          baseURL: 'https://api.deepseek.com',
-          apiKey: process.env.DEEPSEEK_API_KEY
-        });
-        aiModel = "deepseek-chat";
-        break;
-      default:
-        throw new HTTPException(400, {
-          message: "Invalid engine, only accept (gpt, deepseek)"
-        });
-    }
+    history.push({ role: "user", content: message });
 
     const response = await openai.chat.completions.create({
       model: aiModel,
-      messages: [
-        { role: "system", content: "You are a helpful assistant."},
-        { role: "user", content: message }
-      ],
+      messages: history,
     });
-    const AIResponse = response?.choices[0]?.message?.content || "";
+
+    AIResponse = response?.choices[0]?.message?.content || "";
 
     await prismaClient.messages.create({
       data: {

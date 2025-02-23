@@ -35,7 +35,6 @@ export const deleteSession = async (ctx: Context) => {
 
     await SessionService.deleteSession(userId, sessionId);
 
-    // return ctx.json({data: deleteSession}, 200);
     return successResponse(ctx, "", "Delete Session Success !")
   } catch(e: any){
     return errorResponse(ctx, e.status, e.message)
@@ -53,7 +52,6 @@ export const renameSession = async (ctx: Context) => {
     console.log("");
     
     const renameSession = await SessionService.renameSession(userId, sessionId, newName);
-    // return ctx.json({data: renameSession}, 200);
     return successResponse(ctx, renameSession, "Rename Session Success !")
   } catch(e: any){
     return errorResponse(ctx, e.status, e.message)
