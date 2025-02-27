@@ -11,10 +11,13 @@ type ChatCompletionMessageParam = {
 };
 
 export class AiService {
-  static async sendChat(sessionId: string, message: string, history: Array<ChatCompletionMessageParam>): Promise<string> {
-
+  static async sendChat(
+    sessionId: string,
+    message: string,
+    history: Array<ChatCompletionMessageParam>
+  ): Promise<string> {
     // send chat to GPT
-    let AIResponse = 'dummy';
+    let AIResponse = "dummy";
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const aiModel = "gpt-3.5-turbo";
 
@@ -44,12 +47,14 @@ export class AiService {
       },
     });
 
-
     return AIResponse;
   }
 
   // getChat
-  static async getChat(userId: string, sessionId: string): Promise<SessionMessages> {
+  static async getChat(
+    userId: string,
+    sessionId: string
+  ): Promise<SessionMessages> {
     const session = await prismaClient.sessions.findFirst({
       where: {
         id: sessionId,
@@ -58,19 +63,18 @@ export class AiService {
       include: {
         messages: {
           orderBy: {
-            createdAt: "asc"
-          }
+            createdAt: "asc",
+          },
         },
-    }
+      },
     });
 
     if (!session) {
       throw new HTTPException(404, {
-        message: "Session not found"
+        message: "Session not found",
       });
     }
 
     return session;
   }
-
 }

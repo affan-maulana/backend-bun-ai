@@ -4,7 +4,6 @@ import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { ZodError } from "zod";
 import { AuthRoutes } from "./routes/authRoutes";
-import { ChatRoutes } from "./routes/chatRoutes";
 import { AiRoutes } from "./routes/aiRoutes";
 import { SessionRoutes } from "./routes/sessionRoutes";
 
@@ -23,7 +22,6 @@ app.get("/", (c) => {
   return c.text("Welcome to Bun Chat API!");
 });
 app.route("/auth", AuthRoutes);
-// app.route("/chat", ChatRoutes);
 app.route("/ai", AiRoutes);
 app.route("/session", SessionRoutes);
 app.notFound((c) => {

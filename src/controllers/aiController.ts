@@ -34,7 +34,7 @@ export const sendChat = async (ctx: Context) => {
     await SessionService.checkSessionExist(userId, sessionId);
     const responseAI = await AiService.sendChat(sessionId, message, history);
 
-    return successResponse(ctx, responseAI, "Send Chat Success !")
+    return successResponse(ctx, responseAI, "Send Chat Success !", 201)
   } catch(e: any){
     return errorResponse(ctx, e.status, e.message)
   }
@@ -54,7 +54,7 @@ export const generateImage = async (ctx: Context) => {
       model: "dall-e-2"
     });
     
-    return successResponse(ctx, response, "Generate Image Success !")
+    return successResponse(ctx, response, "Generate Image Success !", 201)
   } catch(e: any){
     return errorResponse(ctx, e.status, e.message)
   }

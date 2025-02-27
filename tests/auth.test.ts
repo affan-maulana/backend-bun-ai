@@ -3,10 +3,6 @@ import {UserTest, ApiTest} from "./test-util"
 
 describe("Authentication", () => {
 
-  afterEach(async () => {
-    await UserTest.delete() // Hapus user setelah setiap test
-  })
-
   beforeEach(async () => {
     await UserTest.create()
   })
@@ -53,6 +49,5 @@ describe("Authentication", () => {
     const response = await ApiTest.apiHanlder("auth/login", "POST", body)
     expect(response.status).toBe(401)
   })
-
 
 })

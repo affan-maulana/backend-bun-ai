@@ -18,7 +18,7 @@ export const newSession = async (ctx: Context) => {
   try {
     const userId = getUserIdByToken(ctx.req.header("Authorization"));
     const newSession = await SessionService.createSession(userId);
-    return successResponse(ctx, newSession, "Create Session Success !")
+    return successResponse(ctx, newSession, "Create Session Success !", 201)
   } catch(e: any){
     return errorResponse(ctx, e.status, e.message)
   }

@@ -8,6 +8,9 @@ export class SessionService {
       where: {
         userId: userId,
       },
+      orderBy: {
+        updatedAt: "desc",
+      },
     });
     return sessions;
   }
