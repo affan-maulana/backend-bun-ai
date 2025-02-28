@@ -9,7 +9,7 @@ export class SessionService {
         userId: userId,
       },
       orderBy: {
-        updatedAt: "desc",
+        updatedAt: "asc",
       },
     });
     return sessions;
@@ -27,6 +27,13 @@ export class SessionService {
 
   // deleteSession
   static async deleteSession(userId: string, sessionId: string): Promise<string> {
+    // delete messages
+    await prismaClient.messages.deleteMany({
+      where: {
+        sessionId: sessionId,
+      },
+    });
+
     await prismaClient.sessions.delete({
       where: {
         id: sessionId,
