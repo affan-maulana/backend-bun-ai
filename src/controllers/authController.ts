@@ -57,3 +57,14 @@ export const verifyPinAndLogin = async (ctx: Context) => {
     return errorResponse(ctx, e.status, e.message);
   }
 }
+
+// create function resend email
+export const resendEmail = async (ctx: Context) => {
+  const { email } = await ctx.req.json();
+  try {
+    const response = await AuthService.resendEmail(email);
+    return successResponse(ctx, response, "Email Resent !");
+  } catch (e: any) {
+    return errorResponse(ctx, e.status, e.message);
+  }
+}

@@ -12,6 +12,7 @@ import {
 } from "models/AuthModel";
 import { AuthValidation } from "validation/AuthValidation";
 import { sendEmail } from "@helpers/mailerHelper";
+import { logger } from "application/logging";
 var secret = process.env.JWT_SECRET || "secret";
 
 export class AuthService {
@@ -104,55 +105,33 @@ export class AuthService {
       });
     }
 
-    const tokenVerif = Math.floor(100000 + Math.random() * 900000);
-		// const tokenVerif = 999999;
-    const tokenVerifExp = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes
+    const { tokenVerif } = await generateToken(email);
 
-    //update tokenVerif in user
-    await prismaClient.users.update({
-      where: {
-        email: email,
-      },
-      data: {
-        tokenVerif: tokenVerif,
-        tokenVerifExpiredAt: tokenVerifExp,
-      },
-    });
-
-		// Send email confirmation
-    const subject = "Affan BUN CHAT - Email Confirmation";
-    const text = `Thank you for registering to my platform. Your tokenVerif is ${tokenVerif}`;
-    const html = `
-      <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-        <h2 style="color: #333;">Thank you for registering to my platform</h2>
-        <p>Your token is:</p>
-        <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; display: inline-block;">
-          <h2 style="color: #000; font-weight: bold; margin: 0;">${tokenVerif}</h2>
-        </div>
-        <p>Please use this token to verify your email. Valid for 5 minutes</p>
-      </div>
-    `;
-		
-    sendEmail(email, subject, text, html);
+    emailConfirmation(tokenVerif, email);
 
     // send email confirmation
     return {
       message: "Email Confirmation Sent",
-      tokenVerif,
+      // tokenVerif,
     };
   }
 
 	static async verifyPinAndLogin(email: string, tokenVerif: number) {
     const user = await prismaClient.users.findFirst({
       where: {
-        email: email,
-        tokenVerif: tokenVerif,
+        email: email
       }
     })
 
     if (!user) {
       throw new HTTPException(404, {
         message: "User not found !",
+      });
+    }
+
+    if (user.tokenVerif !== tokenVerif) {
+      throw new HTTPException(400, {
+        message: "Token not match",
       });
     }
 
@@ -185,6 +164,58 @@ export class AuthService {
 		const dataReturn = await jwtLogin(user);
 		return dataReturn
 	}
+
+  static async resendEmail(email: string) {
+    let token: number | undefined;
+    let regenerate: boolean = false;
+
+    const user = await prismaClient.users.findFirst({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!user) {
+      throw new HTTPException(404, {
+        message: "User not found !",
+      });
+    }
+
+    if (user.emailVerified) {
+      throw new HTTPException(400, {
+        message: "Email already verified",
+      });
+    }
+
+    if(user.tokenVerifExpiredAt) {
+      if(user.tokenVerifExpiredAt < new Date()) {
+        regenerate = true;
+      }
+    }else{
+      regenerate = true;
+    }
+
+    if (!user.tokenVerif) {
+      regenerate = true;
+    }else{
+      token = user.tokenVerif;
+    }
+
+    if (regenerate) {
+      const { tokenVerif } = await generateToken(email);
+      token = tokenVerif;
+    }
+
+    logger.info({regenerate, token})
+    if (token) {
+      emailConfirmation(token, email);
+    }
+
+    return {
+      message: "Email Confirmation Sent",
+      // tokenVerif: user.tokenVerif,
+    };
+  }
 }
 
 async function jwtLogin (user: Users) {
@@ -208,4 +239,38 @@ async function jwtLogin (user: Users) {
 		token: token
 	}
 	return tokenUser;
+}
+
+function emailConfirmation(token: number, email: string) {
+  const subject = "Affan BUN CHAT - Email Confirmation";
+  const text = `Thank you for registering to my platform. Your tokenVerif is ${token}`;
+  const html = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <h2 style="color: #333;">Thank you for registering to my platform</h2>
+      <p>Your token is:</p>
+      <div style="background-color: #f0f0f0; padding: 10px; border-radius: 5px; display: inline-block;">
+        <h2 style="color: #000; font-weight: bold; margin: 0;">${token}</h2>
+      </div>
+      <p>Please use this token to verify your email. Valid for 5 minutes</p>
+    </div>
+  `;
+
+  sendEmail(email, subject, text, html);
+}
+
+async function generateToken(email: string) {
+  const tokenVerif = Math.floor(100000 + Math.random() * 900000);
+  const tokenVerifExp = new Date(Date.now() + 1000 * 60 * 5); // 5 minutes
+
+  await prismaClient.users.update({
+    where: {
+      email: email,
+    },
+    data: {
+      tokenVerif: tokenVerif,
+      tokenVerifExpiredAt: tokenVerifExp,
+    },
+  });
+  
+  return { tokenVerif, tokenVerifExp };
 }
