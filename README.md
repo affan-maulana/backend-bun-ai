@@ -1,42 +1,79 @@
 # BUNCHAT AI BACKEND
-Nusachat Backend with Hono and BUN
 
-# To install dependencies:
-- copy .env.example to .env
+BunChat AI Backend is a backend service for AI chat, integrated with ChatGPT.
+
+## Prerequisites
+
+Ensure you have the following installed before proceeding:
+- [Bun](https://bun.sh/docs/installation)
+- [Node.js](https://nodejs.org/) (if deploying on Docker)
+- [PostgreSQL](https://www.postgresql.org/) or any supported database
+- [Prisma](https://www.prisma.io/) for database management
+
+## Installation
+
+### 1. Clone the repository
 ```sh
-# install vendor
-bun install
+git clone https://github.com/affan-maulana/backend-bun-ai.git
+cd backend-bun-ai
+```
 
-# migrate data
+### 2. Copy environment variables
+```sh
+cp .env.example .env
+```
+Modify `.env` with your database and API key configurations.
+
+### 3. Install dependencies
+```sh
+bun install
+```
+
+### 4. Run database migrations
+```sh
 bunx prisma migrate dev --name init
 ```
-- comment for testing purpose on node_modules\pdf-parse\index.js (If error)
 
-To run:
+## Running the Server
+
+To start the backend server, run:
 ```sh
-bun dev 
-or 
+bun run src/index.ts
+```
+
+For development with hot reload:
+```sh
+bun dev
+# or
 bun run dev
 ```
 
-# Prisma
+## Deploying on Docker
+
+Make sure Node.js is installed in the container:
 ```sh
-# to re-migrate
-bunx prisma migrate dev
-
-# To migrate All
-bunx prisma migrate dev --name init
-
-# To run specify model
-bunx prisma migrate dev --name posts
-
-# To regenerate
-bunx prisma generate
-bunx prisma migrate dev --name create_train_methods_table
+node -v
+npm -v
+```
+Then, build and run the container:
+```sh
+docker build -t bunchat-backend .
+docker run -p 3002:3002 bunchat-backend
 ```
 
-# Unit test
-```sh
-# To Run All Unit Test
-$ bun test
-```
+## API Documentation
+
+You can import the Postman collection to test the API:
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/downloads/)
+
+### Import API Collection
+1. Download the collection: [postman_collection.json](postman_collection.json)
+2. Open Postman
+3. Click "Import" and select the downloaded JSON file
+
+Once imported, you can test the API endpoints easily in Postman.
+
+## Contributing
+Feel free to open issues or submit pull requests.
+

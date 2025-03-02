@@ -1,0 +1,679 @@
+{
+	"info": {
+		"_postman_id": "51e7aaa8-1d80-46f8-bda9-009e6c814ea4",
+		"name": "Bun Chat AI",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Scripts\" tab**\n\nAdding tests to your requests can help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/fa30ea0a-373d-4545-a668-e7b283cca343/aW1hZ2UucG5n\" alt=\"\" height=\"1530\" width=\"2162\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n    \n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8105324"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract token from response JSON",
+									"const response = pm.response.json();",
+									"const token = response?.data?.token || \"-\"; // Adjust based on your API response structure",
+									"",
+									"// Set the token to a collection (folder) variable",
+									"pm.collectionVariables.set(\"authToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"affan.m1993@gmail.com\",\n    \"password\": \"12qwaszx\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"destwentio24091993@gmail.com\",\n    \"password\": \"12qwaszx\",\n    \"name\": \"Affan 2\",\n    \"phone\": \"+628128330940\",\n    \"description\": \"Second User\"\n}\n\n// {\n// \t\"email\": \"\",\n//     \"password\": \"\",\n//     \"name\": \"\"\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+					},
+					"response": []
+				},
+				{
+					"name": "Request PIN",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"affan.m1993@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/request",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify PIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract token from response JSON\r",
+									"const response = pm.response.json();\r",
+									"const token = response?.data?.token || \"-\"; // Adjust based on your API response structure\r",
+									"\r",
+									"// Set the token to a collection (folder) variable\r",
+									"pm.collectionVariables.set(\"authToken\", token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"affan.m1993@gmail.com\",\r\n    \"tokenVerif\": 999999\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"affan2@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/resend",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"resend"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "Chat",
+					"item": [
+						{
+							"name": "Send Chat",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"message\": \"ulangi pertanyaan saya sebelumnya\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ai/chat/:sessionId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ai",
+										"chat",
+										":sessionId"
+									],
+									"variable": [
+										{
+											"key": "sessionId",
+											"value": "ee80ffaf-f15b-4a86-bc10-bba845f3a091"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Chat Session",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/ai/chat/:sessionId",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ai",
+										"chat",
+										":sessionId"
+									],
+									"variable": [
+										{
+											"key": "sessionId",
+											"value": "ee80ffaf-f15b-4a86-bc10-bba845f3a091"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Generate Image",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"prompt\": \"buatkan kereta lori tebu in picture\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/ai/image",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"ai",
+										"image"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Generate Image",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"prompt\": \"buatkan kereta lori tebu in picture\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/ai/image",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"ai",
+												"image"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 02 Mar 2025 02:55:23 GMT"
+										},
+										{
+											"key": "Content-Length",
+											"value": "776"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"message\": \"Generate Image Success !\",\n    \"data\": {\n        \"id\": \"cm7r1gjnv000lsbjkpos87bke\",\n        \"userId\": \"df3e18b0-3a09-4246-8c48-d7eecec998d5\",\n        \"prompt\": \"buatkan kereta lori tebu in picture\",\n        \"name\": \"Generated Image\",\n        \"url\": \"https://oaidalleapiprodscus.blob.core.windows.net/private/org-9V4kRSTHzQhKszonQ7JsUsAa/user-0FbUcCtF7N0cIn0lXLCqgLG3/img-equCKQaOq4PRGFmlyASawlon.png?st=2025-03-02T01%3A55%3A24Z&se=2025-03-02T03%3A55%3A24Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=d505667d-d6c1-4a0a-bac7-5c84a87759f8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-03-01T18%3A59%3A39Z&ske=2025-03-02T18%3A59%3A39Z&sks=b&skv=2024-08-04&sig=jl4o5DZzovZMxaOdHnVaasDnYbxeRMscHK%2BMM0Q7JfY%3D\",\n        \"createdAt\": \"2025-03-02T02:55:24.807Z\",\n        \"updatedAt\": \"2025-03-02T02:55:24.807Z\"\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Get user sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/session",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All sessions",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/session",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"session"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 26 Feb 2025 09:54:54 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "611"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Get Session Success !\",\n    \"data\": [\n        {\n            \"id\": \"3f4a2a1a-0a98-497a-8609-19d2d7f1dda8\",\n            \"userId\": \"38a8edda-0b73-4a6b-9fda-31ca36b5b8ec\",\n            \"name\": null,\n            \"createdAt\": \"2025-02-26T09:52:39.979Z\",\n            \"updatedAt\": \"2025-02-26T09:52:39.979Z\"\n        },\n        {\n            \"id\": \"f8d5787b-25c2-4805-bf2c-85d3255b9ed0\",\n            \"userId\": \"38a8edda-0b73-4a6b-9fda-31ca36b5b8ec\",\n            \"name\": null,\n            \"createdAt\": \"2025-02-19T09:52:13.424Z\",\n            \"updatedAt\": \"2025-02-19T09:52:13.424Z\"\n        },\n        {\n            \"id\": \"ee80ffaf-f15b-4a86-bc10-bba845f3a091\",\n            \"userId\": \"38a8edda-0b73-4a6b-9fda-31ca36b5b8ec\",\n            \"name\": null,\n            \"createdAt\": \"2025-02-16T15:45:22.676Z\",\n            \"updatedAt\": \"2025-02-16T15:45:22.676Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Create new session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/session",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"session"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create new session",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/session",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"session"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 26 Feb 2025 09:52:39 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "244"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"Create Session Success !\",\n    \"data\": {\n        \"id\": \"3f4a2a1a-0a98-497a-8609-19d2d7f1dda8\",\n        \"userId\": \"38a8edda-0b73-4a6b-9fda-31ca36b5b8ec\",\n        \"name\": null,\n        \"createdAt\": \"2025-02-26T09:52:39.979Z\",\n        \"updatedAt\": \"2025-02-26T09:52:39.979Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Session",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/session/:sessionId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"session",
+								":sessionId"
+							],
+							"variable": [
+								{
+									"key": "sessionId",
+									"value": "e3009bf1-7227-406d-a2d8-1c479a763452"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rename Session",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"newName\":\"sessi apaan nih\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/session/:sessionId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"session",
+								":sessionId"
+							],
+							"variable": [
+								{
+									"key": "sessionId",
+									"value": "e3009bf1-7227-406d-a2d8-1c479a763453"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "Delete Image by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ai/image/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ai",
+								"image",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "cm7pq92et0001sb1kvogr1dqt"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rename Image by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"new image name\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/ai/image/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ai",
+								"image",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "cm7pq92et0001sb1kvogr1dqt"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Image by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ai/image/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ai",
+								"image",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "cm7pq92et0001sb1kvogr1dqt"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Images",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/ai/images",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"ai",
+								"images"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3002/api"
+		},
+		{
+			"key": "authToken",
+			"value": "AuthToken",
+			"type": "string"
+		}
+	]
+}
