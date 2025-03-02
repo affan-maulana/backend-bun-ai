@@ -9,7 +9,7 @@ COPY package.json ./
 COPY bun.lockb* bun.lock* ./
 
 # Install dependencies using Bun
-# RUN bun install
+RUN bun install
 
 # Copy the rest of the application code
 COPY . .
