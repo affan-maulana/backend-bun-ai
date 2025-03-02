@@ -30,6 +30,7 @@ model Users {
   tokenVerifExpiredAt DateTime?
 
   sessions Sessions[]
+  images   Images[]
 
   @@map("cms_users")
 }
@@ -46,6 +47,20 @@ model Sessions {
   user     Users      @relation(fields: [userId], references: [id])
 
   @@map("trs_sessions")
+}
+
+model Images {
+  id        String   @id @default(cuid())
+  userId    String   @db.VarChar(100)
+  prompt    String   @db.VarChar(200)
+  name      String?   @db.VarChar(100)
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     Users      @relation(fields: [userId], references: [id])
+
+  @@map("trs_images")
 }
 
 // Messages

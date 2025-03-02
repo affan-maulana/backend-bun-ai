@@ -6,3 +6,11 @@ export type MessageResponse = {
     createdAt: Date,
     updatedAt: Date,
 }
+
+export type ImageResponse = {
+    id: string,
+    name?: string | null,
+    url: string,
+    prompt: string,
+    createdAt: Date,
+}
