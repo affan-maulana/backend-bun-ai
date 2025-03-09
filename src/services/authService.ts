@@ -65,7 +65,7 @@ export class AuthService {
     }
 
     if (!user.emailVerified) {
-      throw new HTTPException(401, {
+      throw new HTTPException(400, {
         message: "Email not verified",
       });
     }
@@ -76,8 +76,8 @@ export class AuthService {
       "bcrypt"
     );
     if (!isPasswordValid) {
-      throw new HTTPException(401, {
-        message: "Username or password is wrong",
+      throw new HTTPException(400, {
+        message: "Email or password is not valid",
       });
     }
 

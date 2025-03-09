@@ -1,5 +1,5 @@
-import { HTTPException } from 'hono/http-exception'
-import { Hono } from 'hono'
+import { HTTPException } from "hono/http-exception";
+import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { jwt } from "hono/jwt";
 import { ZodError } from "zod";
@@ -16,42 +16,33 @@ app.use(cors());
 const authMiddleware = jwt({ secret });
 
 app.use("/session", authMiddleware);
+app.use("/ai", authMiddleware);
 
 // Routes
 app.get("/", (c) => {
   return c.text("Welcome to Bun Chat API!");
 });
+
 app.route("/auth", AuthRoutes);
 app.route("/ai", AiRoutes);
 app.route("/session", SessionRoutes);
+
 app.notFound((c) => {
-  return c.json(
-    {
-      errors: "Route not found",
-    },
-    404
-  );
+  return c.json({ errors: "Route not found" }, 404);
 });
 
 app.onError(async (err, c) => {
-  if(err instanceof HTTPException) {
-    c.status(err.status)
-    return c.json({
-      errors: err.message
-    })
-  } else if(err instanceof ZodError) {
-    const messages = err.issues.map((issue) => issue.message); // Ambil hanya pesan error
+  if (err instanceof HTTPException) {
+    c.status(err.status);
+    return c.json({ errors: err.message });
+  } else if (err instanceof ZodError) {
+    const messages = err.issues.map((issue) => issue.message);
     c.status(400);
-    return c.json({
-      errors: messages, // Kirim pesan-pesan error sebagai array
-    });
+    return c.json({ errors: messages });
   } else {
-    c.status(400)
-    return c.json({
-      errors: err.message
-    })
+    c.status(400);
+    return c.json({ errors: err.message });
   }
-})
+});
 
-
-export default app
+export default app;

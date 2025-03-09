@@ -1,9 +1,10 @@
 import { prismaClient } from "application/database";
-import { logger } from "application/logging";
+import axios from "axios";
 import { HTTPException } from "hono/http-exception";
 import { ImageResponse } from "models/ChatModel";
 import { SessionMessages } from "models/SessionModel";
 import OpenAI from "openai";
+import cloudinary from "application/cloudinary";
 
 type ChatCompletionMessageParam = {
   role: "system" | "user" | "assistant";
@@ -80,20 +81,19 @@ export class AiService {
   }
 
   // generateImage
-  static async generateImage(prompt: string, userId:string): Promise<ImageResponse> {
+  static async generateImage(prompt: string, userId: string): Promise<ImageResponse> {
     const countImageGenerated = await prismaClient.images.count({
       where: {
         userId: userId,
       },
     });
-
+  
     if (countImageGenerated >= 5) {
       throw new HTTPException(400, {
         message: "You have reached the limit of image generation",
       });
-      
     }
-    
+  
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.images.generate({
       prompt,
@@ -102,25 +102,39 @@ export class AiService {
       // size: "256x256",
       model: "dall-e-2"
     });
-
+  
     if (!response?.data[0]) {
       throw new HTTPException(400, {
         message: "Failed to generate image",
       });
     }
-
-    // save response to database
-    const url = response?.data[0]?.url || "";
-
-    const newImage = await prismaClient.images.create({
-      data: {
-        url: url,
-        name: "Generated Image " + (countImageGenerated + 1),
-        prompt: prompt,
-        userId: userId,
-      },
+  
+    const imageUrl = response.data[0].url as string;
+    const imageResponse = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const imageBuffer = Buffer.from(imageResponse.data, 'binary');
+   
+    // Upload ke Cloudinary
+    const uploadResult = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ folder: "generated-images" }, (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }).end(imageBuffer);
     });
 
+    if (!uploadResult || typeof uploadResult !== "object") {
+      throw new HTTPException(500, { message: "Failed to upload image to Cloudinary" });
+    }
+
+    // Simpan URL Cloudinary ke database
+    const newImage = await prismaClient.images.create({
+      data: {
+        url: (uploadResult as any).secure_url,
+        name: "Generated Image " + (countImageGenerated + 1),
+        prompt,
+        userId,
+      },
+    });
+  
     return newImage;
   }
 
