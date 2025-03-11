@@ -21,7 +21,7 @@ export class AiService {
     // send chat to GPT
     let AIResponse = "dummy";
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const aiModel = "gpt-3.5-turbo";
+    const aiModel = "gpt-4o-mini";
 
     history.push({ role: "user", content: message });
 
@@ -100,7 +100,7 @@ export class AiService {
       n: 1,
       size: "1024x1024",
       // size: "256x256",
-      model: "dall-e-2"
+      model: "dall-e-3"
     });
   
     if (!response?.data[0]) {
